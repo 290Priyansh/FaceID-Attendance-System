@@ -10,15 +10,6 @@ students_table = supabase.table("students")
 # Define Student Data
 data = [
     {
-        "id":111000,
-        "name": "Priyansh Vaish",
-        "major": "CSE-AIML",
-        "starting_year": 2023,
-        "total_attendance": 80,
-        "standing": "A",
-        "last_attendance": "2025-03-27  00:08:30"
-    },
-    {
         "id":123456,
         "name": "Virat Kholi",
         "major": "CSE-Cyber",
