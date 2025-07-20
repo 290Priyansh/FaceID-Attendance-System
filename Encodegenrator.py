@@ -7,8 +7,8 @@ from supabase import create_client
 
 
 # Initialize Supabase
-SUPABASE_URL = "https://jzixowbqovizmxtvhasj.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXhvd2Jxb3Zpem14dHZoYXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMwODEwMjYsImV4cCI6MjA1ODY1NzAyNn0.udi-RVP97obIUqO0sb9ONLcYYZeHbrkRWz9Gpkr1DwI"
+SUPABASE_URL = "your supabase url"
+SUPABASE_KEY = "your supabase key"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 bucket_name = "students-files"
