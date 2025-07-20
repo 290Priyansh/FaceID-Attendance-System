@@ -1,6 +1,6 @@
 from supabase import create_client
-SUPABASE_URL = "supabase url"
-SUPABASE_KEY = "supabase key"
+SUPABASE_URL = "your supabase url"
+SUPABASE_KEY = "your supabase key"
 # Initialize Supabase client
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
