@@ -29,7 +29,6 @@ A real-time face recognition-based attendance system using OpenCV and the `face_
 
 Follow these steps in **order** to set up and run the system correctly:
 
----
 
 ### 1️⃣ Add Training Images
 
