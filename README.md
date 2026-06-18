@@ -1,39 +1,77 @@
-# 👤 FaceID Attendance System
+# Face Recognition Attendance System
 
-A real-time face recognition-based attendance system using OpenCV and the `face_recognition` library. It recognizes known faces from a webcam feed and logs their attendance automatically — both locally (in a CSV file) and remotely using **Supabase**, a scalable open-source backend.
+This repository contains a Python application for face recognition based attendance management. The system uses computer vision to detect and identify faces, retrieves student records from a Supabase database, and records attendance with a cooldown mechanism to prevent duplicate entries.
 
----
+## System Components
 
-## 📌 Features
+* main.py: The primary application script that manages the webcam stream, processes video frames, performs face recognition, interacts with Supabase, and updates the graphical user interface.
+* Encodegenrator.py: A utility script to load student images from a local directory, generate face encodings, and save them to a serialized file for the main application.
+* AddDataToDatabase.py: A script to initialize the database with student records.
+* face_mesh.py: An independent script demonstrating face landmark detection and triangulation using MediaPipe.
 
-- Live face recognition using webcam
-- Attendance logging with timestamp
-- Automatically prevents duplicate entries for the same session
-- Stores attendance both locally (`Attendance.csv`) and remotely via Supabase
-- Clean and modular code
+## Prerequisites
 
----
+* Python 3.8 or higher
+* A camera or webcam connected to the system
+* A Supabase account and project
 
-## 🛠️ Requirements
+## Installation and Setup
 
-- Python 3.x
-- OpenCV (`opencv-python`)
-- face_recognition
-- NumPy
-- Pandas
-- `supabase` Python client (`supabase-py`)
+1. Install the required Python libraries:
+```bash
+pip install opencv_python face_recognition cvzone numpy supabase python_dotenv mediapipe
+```
 
+2. Create a file named .env in the root directory and add the Supabase credentials:
+```env
+SUPABASE_URL = your_supabase_project_url
+SUPABASE_KEY = your_supabase_api_key
+```
 
----
-## ▶️ How to Use
+3. Place student images in a directory named Images. Ensure the image filenames match the student ID numbers, for example, 123456.png.
 
-Follow these steps in **order** to set up and run the system correctly:
+4. Populate the database table with student records:
+```bash
+python AddDataToDatabase.py
+```
 
+5. Generate the face encodings:
+```bash
+python Encodegenrator.py
+```
 
-### 1️⃣ Add Training Images
+6. Run the main application:
+```bash
+python main.py
+```
 
-- Place clear, front-facing photos of each person inside the `Images/` folder.
-- Make sure the **filename matches the person’s name**, as it will be used as the label.
-### 2️⃣ Encode Faces
-Run the face encoder to process all training images:
-### 3️⃣ Start Attendance System
+## Database Schema
+
+The system requires a table named students in the Supabase database with the following fields:
+
+* id (Integer, Primary Key): Unique identifier for each student
+* name (Text): Student name
+* major (Text): Field of study
+* starting_year (Integer): Year of enrollment
+* total_attendance (Integer): Number of attended sessions
+* standing (Text): Academic standing grade
+* last_attendance (Timestamp): Timestamp of the last recorded attendance
+
+Additionally, a storage bucket named students-files is required to store the student profile images.
+
+## Project Structure
+
+* Images/ : Directory containing student profile pictures
+* Resources/ : Directory containing interface graphics and modes
+* EncodeFile.p : Serialized file containing generated face encodings
+* main.py : Main program program execution
+* Encodegenrator.py : Encoding generation script
+* AddDataToDatabase.py : Initial database populating script
+* face_mesh.py : Landmark detection script
+
+## How It Works
+
+* When a face is detected in the camera feed, the system generates its encoding and compares it with the local precomputed encodings in EncodeFile.p.
+* If a match is found, the system queries the Supabase database for the corresponding student record.
+* The system displays the student profile information and image on the graphical interface.
+* The system checks the last attendance timestamp. If the elapsed time exceeds the cooldown threshold (set to 30 seconds), the system increments the attendance count and updates the record in the database.
