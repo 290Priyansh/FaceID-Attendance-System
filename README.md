@@ -3,10 +3,9 @@
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green.svg)](https://opencv.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Storage-emerald.svg)](https://supabase.com/)
-[![MediaPipe](https://img.shields.io/badge/MediaPipe-Face%20Mesh-orange.svg)](https://mediapipe.dev/)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE)
 
-An automated real-time face recognition attendance management system built with Python, OpenCV, `face_recognition` (dlib), MediaPipe, and Supabase. The system detects and recognizes faces via a live camera feed, compares 128-dimensional encodings against pre-computed local data, displays student information on a graphical user interface, and updates cloud records with a 30-second cooldown mechanism to prevent duplicate entries.
+An automated real-time face recognition attendance management system built with Python, OpenCV, `face_recognition` (dlib), and Supabase. The system detects and recognizes faces via a live camera feed, compares 128-dimensional encodings against pre-computed local data, displays student information on a graphical user interface, and updates cloud records with a 30-second cooldown mechanism to prevent duplicate entries.
 
 ---
 
@@ -16,7 +15,6 @@ An automated real-time face recognition attendance management system built with 
 - **Database Integration**: Cloud storage and database synchronization using Supabase for student metadata and profile assets.
 - **Cooldown Verification**: Automated timestamp validation ensuring student attendance cannot be logged multiple times within a 30-second window.
 - **Graphical User Interface**: Real-time canvas overlay rendering system states, student details, and status indicators onto a custom background layout.
-- **3D Landmark Triangulation**: Standalone MediaPipe module for real-time 468-point 3D face mesh visualization.
 
 ---
 
@@ -27,13 +25,11 @@ Face_recog/
 ├── main.py
 ├── Encodegenrator.py
 ├── AddDataToDatabase.py
-├── face_mesh.py
 ├── EncodeFile.p
 ├── .env
-├── Resources/
-│   ├── Background.png
-│   └── Modes/
-└── two_people.mp4
+└── Resources/
+    ├── Background.png
+    └── Modes/
 ```
 
 ### File Explanations
@@ -43,11 +39,9 @@ Face_recog/
 | **`main.py`** | Primary application entry point. Captures webcam frames, performs facial detection and recognition, queries student records from Supabase, updates GUI elements, and manages attendance update cooldown logic. |
 | **`Encodegenrator.py`** | Pre-processing utility that loads student images, generates 128-dimensional facial feature vectors using `face_recognition`, couples encodings with student IDs, and serializes output to `EncodeFile.p`. |
 | **`AddDataToDatabase.py`** | Database initialization script that inserts or updates student records (ID, Name, Major, Year, Attendance count, Academic Standing, Last Attendance) into the Supabase `students` table. |
-| **`face_mesh.py`** | Standalone computer vision script demonstrating 468 3D facial landmark detection and mesh rendering using MediaPipe FaceMesh over video feeds. |
 | **`EncodeFile.p`** | Serialized binary file containing pre-computed facial encodings and corresponding student ID mappings for fast runtime matching. |
 | **`.env`** | Environment configuration file containing secret API credentials (`SUPABASE_URL` and `SUPABASE_KEY`). |
 | **`Resources/`** | Graphical user interface assets including background templates (`Background.png`) and status mode overlays (`Modes/`). |
-| **`two_people.mp4`** | Sample video file used for demonstrating facial landmark tracking in `face_mesh.py`. |
 
 ---
 
@@ -64,13 +58,13 @@ Face_recog/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/Face_recog.git
+git clone [https://github.com/your-username/Face_recog.git](https://github.com/your-username/Face_recog.git)
 cd Face_recog
 ```
 
 ### 2. Install Dependencies
 ```bash
-pip install opencv-python face-recognition cvzone numpy supabase python-dotenv mediapipe
+pip install opencv-python face-recognition cvzone numpy supabase python-dotenv
 ```
 
 ### 3. Environment Configuration
@@ -119,12 +113,6 @@ python main.py
 ```
 *Press `q` to terminate the application.*
 
-### Step 4: Run Face Mesh Demo (Optional)
-To execute the standalone MediaPipe 3D face mesh demonstration:
-```bash
-python face_mesh.py
-```
-
 ---
 
 ## System Execution Flow
@@ -152,7 +140,7 @@ flowchart TD
 ## Tech Stack
 
 - **Programming Language:** Python 3.8+
-- **Computer Vision:** OpenCV, cvzone, MediaPipe
+- **Computer Vision:** OpenCV, cvzone
 - **Facial Recognition:** face_recognition (dlib)
 - **Backend / Database:** Supabase (Database & Object Storage)
 - **Environment Management:** python-dotenv
@@ -163,4 +151,3 @@ flowchart TD
 ## License
 
 Distributed under the MIT License.
-
