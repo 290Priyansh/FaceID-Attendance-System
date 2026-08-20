@@ -8,6 +8,58 @@ from supabase import create_client
 from datetime import datetime
 from dotenv import load_dotenv
 import sys
+import csv
+
+# --- CSV Attendance Log Setup ---
+CSV_FILE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "attendance.csv")
+session_marked_students = set()
+
+
+def log_attendance_csv(name, student_id=None):
+    """
+    Logs attendance to a local CSV file with session-level deduplication and basic error handling.
+
+    Args:
+        name (str): Person's name.
+        student_id (str/int, optional): Unique ID for session deduplication.
+    """
+    # 1. Basic error handling: Invalid or incomplete attendance data
+    if not name or not isinstance(name, str) or name.strip() == "" or name == "N/A":
+        print("ERROR [CSV]: Invalid or incomplete attendance data (name missing or invalid).")
+        return False
+
+    # 2. Session-level deduplication check
+    dedup_key = str(student_id) if student_id is not None else name.strip()
+    if dedup_key in session_marked_students:
+        print(f"DEBUG [CSV]: Student '{name}' (ID: {dedup_key}) already marked present in this session. Skipping CSV write.")
+        return False
+
+    now = datetime.now()
+    current_date = now.strftime("%Y-%m-%d")
+    current_time = now.strftime("%H:%M:%S")
+
+    file_exists = os.path.exists(CSV_FILE_PATH)
+
+    # 3. File write operation with error handling
+    try:
+        with open(CSV_FILE_PATH, mode='a', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
+            # If file doesn't exist or is empty, write header first
+            if not file_exists or os.path.getsize(CSV_FILE_PATH) == 0:
+                writer.writerow(["Name", "Date", "Time"])
+
+            writer.writerow([name.strip(), current_date, current_time])
+
+        session_marked_students.add(dedup_key)
+        print(f"SUCCESS [CSV]: Attendance logged for '{name.strip()}' on {current_date} at {current_time}.")
+        return True
+    except PermissionError as pe:
+        print(f"ERROR [CSV]: File permission denied when writing to {CSV_FILE_PATH}: {pe}")
+        return False
+    except Exception as e:
+        print(f"ERROR [CSV]: Unexpected error while writing to CSV: {e}")
+        return False
+
 
 # --- Path Configuration ---
 module_path = r"D:\\python\\openCV"
@@ -254,6 +306,10 @@ while True:
                 print(f"DEBUG_DISPLAY: Display time elapsed ({counter} frames). Proceeding to attendance marking logic.")
                 # --- Attendance Marking Logic (executes ONLY once after display duration) ---
                 if studentInfo:
+                    # Log attendance to local CSV file (session deduplicated)
+                    student_name = studentInfo.get('name', 'N/A')
+                    log_attendance_csv(student_name, student_id=id)
+
                     last_attendance_db = studentInfo.get('last_attendance', None)
                     print(f"DEBUG_ATTENDANCE: Last attendance time from DB ('last_attendance'): {last_attendance_db}")
 
